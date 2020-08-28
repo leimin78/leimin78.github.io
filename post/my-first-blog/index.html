@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="Hugo Blog first post" />
-    <meta property="og:title" content="Hugo Blog first post" />
-    <meta property="twitter:title" content="Hugo Blog first post" />
+    <meta name="title" content="Hugo &#43; Github 搭建你的博客" />
+    <meta property="og:title" content="Hugo &#43; Github 搭建你的博客" />
+    <meta property="twitter:title" content="Hugo &#43; Github 搭建你的博客" />
     
 
     
-    <meta name="description" content="一个简单测试，用hugo创建文章">
-    <meta property="og:description" content="一个简单测试，用hugo创建文章" />
-    <meta property="twitter:description" content="一个简单测试，用hugo创建文章" />
+    <meta name="description" content="记录Hugo &#43; Github 搭建个人Blog过程">
+    <meta property="og:description" content="记录Hugo &#43; Github 搭建个人Blog过程" />
+    <meta property="twitter:description" content="记录Hugo &#43; Github 搭建个人Blog过程" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content=" 开心, 开心Coder, coder, 博客, 个人网站, 互联网, devops, 云原生, Kubernetes, 微服务,Love and Peace">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Hugo Blog first post-开心-Coder | Kaixing Coder</title>
+    <title>Hugo &#43; Github 搭建你的博客-开心-Coder | Kaixing Coder</title>
 
     <link rel="canonical" href="/post/my-first-blog/">
 
@@ -159,13 +159,13 @@
                             hugo
                         </a>
                         
-                        <a class="tag" href="/tags/first" title="first">
-                            first
+                        <a class="tag" href="/tags/git" title="git">
+                            git
                         </a>
                         
                     </div>
-                    <h1>Hugo Blog first post</h1>
-                    <h2 class="subheading">Hugo 搭建的blog</h2>
+                    <h1>Hugo &#43; Github 搭建你的博客</h1>
+                    <h2 class="subheading">Love &amp;&amp; Peace</h2>
                     <span class="meta">
                         Posted by 
                         
@@ -202,15 +202,79 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#什么是hugo">什么是Hugo</a></li>
+    <li><a href="#安装hugo">安装Hugo</a></li>
+    <li><a href="#hugo-简单使用">Hugo 简单使用</a>
       <ul>
-        <li><a href="#你好hugo--初次使用多指教">你好Hugo , 初次使用多指教。</a></li>
+        <li><a href="#如何上传到github-并使用github-page">如何上传到github ，并使用github page</a></li>
       </ul>
     </li>
   </ul>
 </nav>
                 
-                <h3 id="你好hugo--初次使用多指教">你好Hugo , 初次使用多指教。</h3>
+                <h2 id="什么是hugo">什么是Hugo</h2>
+<p>参考wiki <a href="https://zh.wikipedia.org/wiki/Hugo_(%E8%BB%9F%E4%BB%B6)">Hugo wiki</a>
+Git仓库地址 <a href="https://github.com/gohugoio/hugo">Hugo git</a></p>
+<h2 id="安装hugo">安装Hugo</h2>
+<p>下载对应的编译版本后可直接运行, 本地环境需要有git，及golang</p>
+<h2 id="hugo-简单使用">Hugo 简单使用</h2>
+<p>1.使用hugo new site xxxx 创建属于自己的blog目录
+例如 <code> hugo new site myblog</code></p>
+<p>2.挑选喜欢的主题
+hugo 主题库地址 <a href="https://themes.gohugo.io/">Hugo theme</a></p>
+<p>3.使用主题<br>
+进入hugo 站点目录找到自己心仪的主题 clone
+例如:
+<code>cd myblog</code></p>
+<pre><code>    git clone https://github.com/zhaohuabing/hugo-theme-cleanwhite.git themes/hugo-theme-cleanwhite
+</code></pre><p>修改config.yaml
+例如:</p>
+<pre><code>baseURL = &quot;http://leimin78.github.io/&quot;
+languageCode = &quot;zh-CN&quot;
+title = &quot;开心-Coder&quot;
+theme = &quot;hugo-theme-cleanwhite&quot;
+
+[outputs]
+home = [&quot;HTML&quot;, &quot;RSS&quot;]
+
+[params]
+  header_image = &quot;img/home-bg-jeep.jpg&quot;
+  SEOTitle = &quot;开心-Coder | Kaixing Coder&quot;
+  description = &quot;运维开发，三流程序员, 游戏爱好者 | 啥都会一点儿&quot;
+  keyword = &quot; 开心, 开心Coder, coder, 博客, 个人网站, 互联网, devops, 云原生, Kubernetes, 微服务,Love and Peace&quot;
+  slogan = &quot;天塌下来有个子高的顶着&quot;
+
+  image_404 = &quot;img/404.jpg&quot;
+  title_404 = &quot;你来到了没有知识的荒原 :(&quot;
+  omit_categories = false
+
+</code></pre><p>创建日志</p>
+<p>例如：
+<code>hugo new post/my-first-blog.md</code>
+执行该命令后日志文件存放在content/post目录中 自行使用markdown语法编辑即可</p>
+<h3 id="如何上传到github-并使用github-page">如何上传到github ，并使用github page</h3>
+<p>1.github 创建两个仓库
+仓库1 ，名称任意用于存放hugo 原始文件。
+仓库2 ，命名必须为<!-- raw HTML omitted -->.github.io 用于存放hugo生成的静态页面文件，被github pages直接解析</p>
+<p>仓库1推送步骤.
+例如:</p>
+<pre><code>git init
+git remote add origin https://github.com/leimin78/my-hugo.git
+git add .
+git commit -m &quot;hugo 初始化&quot;
+git push origin master
+
+</code></pre><p>仓库2推送步骤
+先使用hugo命令，生成public目录
+进入public目录后同仓库1步骤如下:
+例如:</p>
+<pre><code>git init
+git remote add origin https://github.com/leimin78/leimin78.github.io.git
+git add .
+git commit -m &quot;hugo 初始化&quot;
+git push origin master
+
+</code></pre><p>完成上述操作后，打开 leimin78.github.io 就可以访问你自己的blog</p>
 
 
                 

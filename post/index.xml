@@ -12,12 +12,19 @@
     
     
     <item>
-      <title>Hugo Blog first post</title>
+      <title>Hugo &#43; Github 搭建你的博客</title>
       <link>http://leimin78.github.io/post/my-first-blog/</link>
       <pubDate>Fri, 28 Aug 2020 00:00:00 +0000</pubDate>
       
       <guid>http://leimin78.github.io/post/my-first-blog/</guid>
-      <description>你好Hugo , 初次使用多指教。 </description>
+      <description>什么是Hugo 参考wiki Hugo wiki Git仓库地址 Hugo git
+安装Hugo 下载对应的编译版本后可直接运行, 本地环境需要有git，及golang
+Hugo 简单使用 1.使用hugo new site xxxx 创建属于自己的blog目录 例如  hugo new site myblog
+2.挑选喜欢的主题 hugo 主题库地址 Hugo theme
+3.使用主题
+进入hugo 站点目录找到自己心仪的主题 clone 例如: cd myblog
+ git clone https://github.com/zhaohuabing/hugo-theme-cleanwhite.git themes/hugo-theme-cleanwhite 修改config.yaml 例如:
+baseURL = &amp;quot;http://leimin78.github.io/&amp;quot; languageCode = &amp;quot;zh-CN&amp;quot; title = &amp;quot;开心-Coder&amp;quot; theme = &amp;quot;hugo-theme-cleanwhite&amp;quot; [outputs] home = [&amp;quot;HTML&amp;quot;, &amp;quot;RSS&amp;quot;] [params] header_image = &amp;quot;img/home-bg-jeep.jpg&amp;quot; SEOTitle = &amp;quot;开心-Coder | Kaixing Coder&amp;quot; description = &amp;quot;运维开发，三流程序员, 游戏爱好者 | 啥都会一点儿&amp;quot; keyword = &amp;quot; 开心, 开心Coder, coder, 博客, 个人网站, 互联网, devops, 云原生, Kubernetes, 微服务,Love and Peace&amp;quot; slogan = &amp;quot;天塌下来有个子高的顶着&amp;quot; image_404 = &amp;quot;img/404.</description>
     </item>
     
   </channel>
