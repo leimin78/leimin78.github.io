@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="开心-Coder">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://leimin78.github.io//img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="http://leimin78.github.io//img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="kubeadm 多master k8s 1.18 搭建" />
+    <meta property="og:title" content="kubeadm 多master k8s 1.18 搭建" />
+    <meta property="twitter:title" content="kubeadm 多master k8s 1.18 搭建" />
+    
+
+    
+    <meta name="description" content="kubeadm 搭建高可用k8s集群">
+    <meta property="og:description" content="kubeadm 搭建高可用k8s集群" />
+    <meta property="twitter:description" content="kubeadm 搭建高可用k8s集群" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content=" 开心, 开心Coder, coder, 博客, 个人网站, 互联网, devops, 云原生, Kubernetes, 微服务,Love and Peace">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>kubeadm 多master k8s 1.18 搭建-开心-Coder | Kaixing Coder</title>
+
+    <link rel="canonical" href="/post/k8s-group-install/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">开心-Coder</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">tech</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home-bg-jeep.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        <a class="tag" href="/tags/kubeadm" title="kubeadm">
+                            kubeadm
+                        </a>
+                        
+                    </div>
+                    <h1>kubeadm 多master k8s 1.18 搭建</h1>
+                    <h2 class="subheading">k8s</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;leimin&#34;
+                         
+                        on 
+                        Friday, September 4, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#所需环境">所需环境</a></li>
+        <li><a href="#所有节点关闭-iptablesselinuxswap-分区">所有节点关闭 iptables,selinux,swap 分区</a></li>
+        <li><a href="#时间同步-yum源">时间同步 yum源</a></li>
+        <li><a href="#配置ulimt">配置ulimt</a></li>
+        <li><a href="#配置内核参数">配置内核参数</a></li>
+        <li><a href="#安装ipvs-及模块加载">安装ipvs 及模块加载</a></li>
+        <li><a href="#安装docker-ce">安装docker-ce</a></li>
+        <li><a href="#安装k8s组件">安装k8s组件</a></li>
+        <li><a href="#集群初始化">集群初始化</a></li>
+        <li><a href="#所有master节点安装ha-proxykeep-alived">所有master节点安装HA-PROXY,KEEP-ALIVED</a></li>
+        <li><a href="#haproxy-配置-所有节点master节点相同">haproxy 配置 所有节点master节点相同</a></li>
+        <li><a href="#keepalived-配置">keepalived 配置</a></li>
+        <li><a href="#健康检查脚本-check-apiserversh">健康检查脚本 check-apiserver.sh</a></li>
+        <li><a href="#启动haproxy-keepalived">启动haproxy ,keepalived</a></li>
+        <li><a href="#master-初始化">master 初始化</a></li>
+        <li><a href="#获取节点加入的命令">获取节点加入的命令</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                
+                <h3 id="所需环境">所需环境</h3>
+<ol>
+<li>虚拟机创建4台虚拟机,配置 2c 4g</li>
+<li>192.168.75.128 k8s-m1</li>
+<li>192.168.75.129 k8s-m2</li>
+<li>192.168.75.130 k8s-m3</li>
+<li>192.168.75.131 k8s-n1</li>
+</ol>
+<h3 id="所有节点关闭-iptablesselinuxswap-分区">所有节点关闭 iptables,selinux,swap 分区</h3>
+<pre><code>systemctl stop firewalld
+systemctl disable firewalld
+iptables -F &amp;&amp; iptables -X &amp;&amp; iptables -F -t nat &amp;&amp; iptables -X -t nat
+iptables -P FORWARD ACCEPT
+swapoff -a
+sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+setenforce 0
+sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+
+</code></pre><h3 id="时间同步-yum源">时间同步 yum源</h3>
+<pre><code>
+yum install chrony -y
+systemctl enable chronyd
+systemctl start chronyd
+chronyc sources
+
+</code></pre><h3 id="配置ulimt">配置ulimt</h3>
+<pre><code>ulimit -SHn 65535
+</code></pre><h3 id="配置内核参数">配置内核参数</h3>
+<pre><code>cat &gt;&gt; /etc/sysctl.d/k8s.conf &lt;&lt; EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+vm.swappiness=0
+EOF
+
+sysctl -p
+
+
+</code></pre><h3 id="安装ipvs-及模块加载">安装ipvs 及模块加载</h3>
+<pre><code>yum install ipvsadm ipset sysstat conntrack libseccomp -y
+
+cat &gt; /etc/sysconfig/modules/ipvs.modules &lt;&lt;EOF
+#!/bin/bash
+modprobe -- ip_vs
+modprobe -- ip_vs_rr
+modprobe -- ip_vs_wrr
+modprobe -- ip_vs_sh
+modprobe -- nf_conntrack
+modprobe -- ip_tables
+modprobe -- ip_set
+modprobe -- xt_set
+modprobe -- ipt_set
+modprobe -- ipt_rpfilter
+modprobe -- ipt_REJECT
+modprobe -- ipip
+EOF
+
+chmod 755 /etc/sysconfig/modules/ipvs.modules &amp;&amp; bash /etc/sysconfig/modules/ipvs.modules &amp;&amp; lsmod | grep -e ip_vs -e nf_conntrack
+
+</code></pre><h3 id="安装docker-ce">安装docker-ce</h3>
+<pre><code>
+yum install docker-ce-19.03.8-3.el7 -y
+systemctl start docker
+systemctl enable docker
+
+
+curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://f1361db2.m.daocloud.io
+
+systemctl restart docker
+</code></pre><h3 id="安装k8s组件">安装k8s组件</h3>
+<pre><code>cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
+ http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+
+
+yum install -y kubelet-1.18.2-0 kubeadm-1.18.2-0 kubectl-1.18.2-0 --disableexcludes=kubernetes
+systemctl enable kubelet.service
+
+</code></pre><p>以上操作所有节点进行</p>
+<h3 id="集群初始化">集群初始化</h3>
+<h3 id="所有master节点安装ha-proxykeep-alived">所有master节点安装HA-PROXY,KEEP-ALIVED</h3>
+<pre><code>yum install keepalived haproxy -y
+
+</code></pre><h3 id="haproxy-配置-所有节点master节点相同">haproxy 配置 所有节点master节点相同</h3>
+<pre><code>#---------------------------------------------------------------------
+# Example configuration for a possible web application.  See the
+# full configuration options online.
+#
+#   https://www.haproxy.org/download/1.8/doc/configuration.txt
+#
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    # to have these messages end up in /var/log/haproxy.log you will
+    # need to:
+    #
+    # 1) configure syslog to accept network log events.  This is done
+    #    by adding the '-r' option to the SYSLOGD_OPTIONS in
+    #    /etc/sysconfig/syslog
+    #
+    # 2) configure local2 events to go to the /var/log/haproxy.log
+    #   file. A line like the following can be added to
+    #   /etc/sysconfig/syslog
+    #
+    #    local2.*                       /var/log/haproxy.log
+    #
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+    # utilize system-wide crypto-policies
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+#---------------------------------------------------------------------
+#kubernetes-apiserver frontend which proxys to the backends
+#---------------------------------------------------------------------
+frontend kubernets
+	mode		tcp
+	bind		*:16443
+	option		tcplog
+	default_backend kubernetes-apiserver
+
+#---------------------------------------------------------------------
+# static backend for serving up images, stylesheets and such
+#---------------------------------------------------------------------
+backend kubernetes-apiserver
+	mode		tcp
+	balance		roundrobin
+	server		k8s-m1 192.168.75.128:6443 check
+	server		k8s-m2 192.168.75.129:6443 check
+	server      k8s-m3 192.168.75.130:6443 check
+
+#---------------------------------------------------------------------
+# collection haproxy statistics message
+#---------------------------------------------------------------------
+listen stats
+    bind                 *:9999
+    stats auth           admin:P@ssW0rd
+    stats refresh        5s
+    stats realm          HAProxy\ Statistics
+    stats uri            /admin?stats
+
+</code></pre><h3 id="keepalived-配置">keepalived 配置</h3>
+<p>各节点priority值不一样</p>
+<pre><code>! Configuration File for keepalived
+
+global_defs {
+   notification_email {
+     acassen@firewall.loc
+     failover@firewall.loc
+     sysadmin@firewall.loc
+   }
+   notification_email_from Alexandre.Cassen@firewall.loc
+   smtp_server 192.168.200.1
+   smtp_connect_timeout 30
+   router_id LVS_DEVEL
+   vrrp_skip_check_adv_addr
+   vrrp_garp_interval 0
+   vrrp_gna_interval 0
+}
+
+#定义脚本
+vrrp_script check_apiserver {
+    script &quot;/etc/keepalived/check_apiserver.sh&quot; 
+    interval 2                                  
+    weight -5                                  
+    fall 3                                   
+    rise 2                               
+}
+
+
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens33
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.75.200
+    }
+}
+
+
+</code></pre><h3 id="健康检查脚本-check-apiserversh">健康检查脚本 check-apiserver.sh</h3>
+<pre><code>#!/bin/bash
+
+function check_apiserver(){
+ for ((i=0;i&lt;5;i++))
+ do
+  apiserver_job_id=${pgrep kube-apiserver}
+  if [[ ! -z ${apiserver_job_id} ]];then
+   return
+  else
+   sleep 2
+  fi
+  apiserver_job_id=0
+ done
+}
+
+# 1-&gt;running    0-&gt;stopped
+check_apiserver
+if [[ $apiserver_job_id -eq 0 ]];then
+ /usr/bin/systemctl stop keepalived
+ exit 1
+else
+ exit 0
+fi
+
+</code></pre><h3 id="启动haproxy-keepalived">启动haproxy ,keepalived</h3>
+<p>systemctl enable &ndash;now keepalived
+systemctl enable &ndash;now haproxy</p>
+<h3 id="master-初始化">master 初始化</h3>
+<pre><code>cat &gt;&gt; kubeadm.yaml &lt;&lt;EOF
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: v1.18.2
+imageRepository: registry.cn-hangzhou.aliyuncs.com/google_containers
+controlPlaneEndpoint: &quot;k8s-lb:16443&quot;
+networking:
+  dnsDomain: cluster.local
+  podSubnet: 10.244.0.0/16
+  serviceSubnet: 10.96.0.0/12
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+featureGates:
+  SupportIPVSProxyMode: true
+mode: ipvs
+EOF
+
+</code></pre><p>拉取镜像文件
+kubeadm config images pull &ndash;config kubeadm.yaml</p>
+<p>初始化
+kubeadm init &ndash;config=kubeadm.yaml</p>
+<p>配置环境变量</p>
+<pre><code>cat &gt;&gt; /root/.bashrc &lt;&lt;EOF
+export KUBECONFIG=/etc/kubernetes/admin.conf
+EOF
+source /root/.bashrc
+</code></pre><p>安装calico.yaml
+wget <a href="https://docs.projectcalico.org/v3.8/manifests/calico.yaml">https://docs.projectcalico.org/v3.8/manifests/calico.yaml</a>
+修改calico.yaml</p>
+<pre><code>
+- name: IP_AUTODETECTION_METHOD
+  value: &quot;interface=ens33&quot;
+- name: CALICO_IPV4POOL_CIDR
+  value: &quot;10.244.0.0/16&quot;
+
+</code></pre><pre><code>遇到等坑，排查问题步骤，calico装不上排查步骤
+1.先检查kube-proxy
+2.再检查calico-node 
+3.最后检查calico-kube-controller
+</code></pre><h3 id="获取节点加入的命令">获取节点加入的命令</h3>
+<pre><code>sudo kubeadm init phase upload-certs --upload-certs
+
+### Got:
+# [upload-certs] Using certificate key:
+# 2ffe5bbf7d2e670d5bcfb03dac194e2f21eb9715f2099c5f8574e4ba7679ff78
+
+# Add certificate-key for Multi Master Node.
+kubeadm token create --print-join-command --certificate-key 2ffe5bbf7d2e670d5bcfb03dac194e2f21eb9715f2099c5f8574e4ba7679ff78
+</code></pre><p>至此高可用的集群搭建完毕~</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/my-first-blog/" data-toggle="tooltip" data-placement="top" title="Hugo &#43; Github 搭建你的博客">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 开心-Coder 2020
+                    <br>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

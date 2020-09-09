@@ -6,10 +6,19 @@
     <description>Recent content in Tech on 开心-Coder</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 28 Aug 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 04 Sep 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://leimin78.github.io/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kubeadm 多master k8s 1.18 搭建</title>
+      <link>http://leimin78.github.io/post/k8s-group-install/</link>
+      <pubDate>Fri, 04 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://leimin78.github.io/post/k8s-group-install/</guid>
+      <description>所需环境  虚拟机创建4台虚拟机,配置 2c 4g 192.168.75.128 k8s-m1 192.168.75.129 k8s-m2 192.168.75.130 k8s-m3 192.168.75.131 k8s-n1  所有节点关闭 iptables,selinux,swap 分区 systemctl stop firewalld systemctl disable firewalld iptables -F &amp;amp;&amp;amp; iptables -X &amp;amp;&amp;amp; iptables -F -t nat &amp;amp;&amp;amp; iptables -X -t nat iptables -P FORWARD ACCEPT swapoff -a sed -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab setenforce 0 sed -i &#39;s/^SELINUX=.*/SELINUX=disabled/&#39; /etc/selinux/config 时间同步 yum源  yum install chrony -y systemctl enable chronyd systemctl start chronyd chronyc sources 配置ulimt ulimit -SHn 65535 配置内核参数 cat &amp;gt;&amp;gt; /etc/sysctl.</description>
+    </item>
     
     <item>
       <title>Hugo &#43; Github 搭建你的博客</title>
