@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="" />
-    <meta property="og:title" content="" />
-    <meta property="twitter:title" content="" />
+    <meta name="title" content="为什么需要kubernetes?" />
+    <meta property="og:title" content="为什么需要kubernetes?" />
+    <meta property="twitter:title" content="为什么需要kubernetes?" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content=" 开心, 开心Coder, coder, 博客, 个人网站, 互联网, devops, 云原生, Kubernetes, 微服务,Love and Peace">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Tags-开心-Coder | Kaixing Coder</title>
+    <title>为什么需要kubernetes?-开心-Coder | Kaixing Coder</title>
 
-    <link rel="canonical" href="/tags/">
+    <link rel="canonical" href="/post/kubernetes-01/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -146,14 +146,41 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/home-bg-jeep.jpg')">
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home-bg-jeep.jpg')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>开心-Coder </h1>
-                    
-		    <span class="subheading">天塌下来有个子高的顶着</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E8%BF%90%E7%BB%B4" title="运维">
+                            运维
+                        </a>
+                        
+                        <a class="tag" href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                    </div>
+                    <h1>为什么需要kubernetes?</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;&#34;
+                         
+                        on 
+                        Friday, September 11, 2020
+                        
+                        
+                        
+                    </span>
                 </div>
             </div>
         </div>
@@ -166,13 +193,87 @@
 <article>
     <div class="container">
         <div class="row">
+
             
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-11 col-lg-offset-1
                 col-md-10 col-md-offset-1
                 post-container">
 
-         	
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#应用部署时代演变">应用部署时代演变</a></li>
+        <li><a href="#kubernetes-能干啥">Kubernetes 能干啥？</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                
+                <h3 id="应用部署时代演变">应用部署时代演变</h3>
+<ol>
+<li>
+<p>传统的基础架构,应用直接部署在物理机上面。无法对应用进行很好的资源隔离，例如一台物理机器中运行了两个应用程序，其中一个应用程序占用
+了大量的系统资源，势必会导致另一个程序的性能下降。如果将应用分开部署到不同的物理机中又会导致物理机的资源浪费，同时管理上也会提升
+很多不必要的成本</p>
+</li>
+<li>
+<p>虚拟部署时代,借助虚拟化技术的兴起，一台性能强劲的物理机，能够虚拟出多个虚拟机出来，每一台虚拟机都是一个单独的机器，有单独的操作系统。
+虚拟机降低了传统基础架构中的硬件成本，因为在虚拟机中需要单独部署操作系统，会造成性能损耗。</p>
+</li>
+<li>
+<p>容器部署时代,借助操作系统的内核，对cpu,内存，网络进行，进程，进行隔离，每个容器可以看做是轻量的vm,容器时代，更大的提升了资源的利用率。
+同时因为镜像的不可变性，让应用无需关心基础架构，应用架构进行隔离。</p>
+</li>
+</ol>
+<p>
+  <img src="../../staic/../static/kubernetes-01/container_evolution.svg" alt="引用部署演进">
+
+</p>
+<h3 id="kubernetes-能干啥">Kubernetes 能干啥？</h3>
+<ol>
+<li>
+<p>服务发现，负载均衡：
+kubernets 可以为内部容器，提供dns,及容器自己的ip来开放自己，如果碰到流量大的容器，可以通过service来对流量进行负载，到不同的容器中。</p>
+</li>
+<li>
+<p>存储编排:
+kubernets 可以挂载本地文件系统，及各类云存储，及常见的开源存储方案</p>
+</li>
+<li>
+<p>自动部署和回滚:
+可以自定义描述容器的状态，kubernetes会按照定义进行检测，按照定义对容器进行自动的扩展，或回滚操作。</p>
+</li>
+<li>
+<p>自我修复:
+Kubernetes 重新启动失败的容器、替换容器、杀死不响应用户定义的运行状况检查的容器，并且在准备好服务之前不将其通告给客户端。</p>
+</li>
+<li>
+<p>秘钥配置管理:
+Kubernetes 允许您存储和管理敏感信息，例如密码、OAuth 令牌和 ssh 密钥。您可以在不重建容器镜像的情况下部署和更新密钥和应用程序配置，也无需在堆栈配置中暴露密钥。</p>
+</li>
+</ol>
+<p>总结， 容器时代应用与基础架构分离，但怎么样大规模的运行不同的容器呢？kubernets 就是容器海洋中的掌舵手，让大规模的容器应用变得更安全，更好管理。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/k8s-group-install/" data-toggle="tooltip" data-placement="top" title="kubeadm 多master k8s 1.18 搭建">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
                 
 <div id="disqus-comment"></div>
 
@@ -181,7 +282,7 @@
             </div>
             
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-11 col-lg-offset-1
                 col-md-10 col-md-offset-1
                 sidebar-container">
 

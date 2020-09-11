@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>开心-Coder</title>
-    <link>http://leimin78.github.io/</link>
-    <description>Recent content on 开心-Coder</description>
+    <title>运维 on 开心-Coder</title>
+    <link>http://leimin78.github.io/tags/%E8%BF%90%E7%BB%B4/</link>
+    <description>Recent content in 运维 on 开心-Coder</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <lastBuildDate>Fri, 11 Sep 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://leimin78.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://leimin78.github.io/tags/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -26,31 +26,6 @@
   自我修复: Kubernetes 重新启动失败的容器、替换容器、杀死不响应用户定义的运行状况检查的容器，并且在准备好服务之前不将其通告给客户端。
   秘钥配置管理: Kubernetes 允许您存储和管理敏感信息，例如密码、OAuth 令牌和 ssh 密钥。您可以在不重建容器镜像的情况下部署和更新密钥和应用程序配置，也无需在堆栈配置中暴露密钥。
   总结， 容器时代应用与基础架构分离，但怎么样大规模的运行不同的容器呢？kubernets 就是容器海洋中的掌舵手，让大规模的容器应用变得更安全，更好管理。</description>
-    </item>
-    
-    <item>
-      <title>kubeadm 多master k8s 1.18 搭建</title>
-      <link>http://leimin78.github.io/post/k8s-group-install/</link>
-      <pubDate>Fri, 04 Sep 2020 00:00:00 +0000</pubDate>
-      
-      <guid>http://leimin78.github.io/post/k8s-group-install/</guid>
-      <description>所需环境  虚拟机创建4台虚拟机,配置 2c 4g 192.168.75.128 k8s-m1 192.168.75.129 k8s-m2 192.168.75.130 k8s-m3 192.168.75.131 k8s-n1  所有节点关闭 iptables,selinux,swap 分区 systemctl stop firewalld systemctl disable firewalld iptables -F &amp;amp;&amp;amp; iptables -X &amp;amp;&amp;amp; iptables -F -t nat &amp;amp;&amp;amp; iptables -X -t nat iptables -P FORWARD ACCEPT swapoff -a sed -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab setenforce 0 sed -i &#39;s/^SELINUX=.*/SELINUX=disabled/&#39; /etc/selinux/config 时间同步 yum源  yum install chrony -y systemctl enable chronyd systemctl start chronyd chronyc sources 配置ulimt ulimit -SHn 65535 配置内核参数 cat &amp;gt;&amp;gt; /etc/sysctl.</description>
-    </item>
-    
-    <item>
-      <title>Hugo &#43; Github 搭建你的博客</title>
-      <link>http://leimin78.github.io/post/my-first-blog/</link>
-      <pubDate>Fri, 28 Aug 2020 00:00:00 +0000</pubDate>
-      
-      <guid>http://leimin78.github.io/post/my-first-blog/</guid>
-      <description>什么是Hugo 参考wiki Hugo wiki Git仓库地址 Hugo git
-安装Hugo 下载对应的编译版本后可直接运行, 本地环境需要有git，及golang
-Hugo 简单使用 1.使用hugo new site xxxx 创建属于自己的blog目录 例如  hugo new site myblog
-2.挑选喜欢的主题 hugo 主题库地址 Hugo theme
-3.使用主题
-进入hugo 站点目录找到自己心仪的主题 clone 例如: cd myblog
- git clone https://github.com/zhaohuabing/hugo-theme-cleanwhite.git themes/hugo-theme-cleanwhite 修改config.yaml 例如:
-baseURL = &amp;quot;http://leimin78.github.io/&amp;quot; languageCode = &amp;quot;zh-CN&amp;quot; title = &amp;quot;开心-Coder&amp;quot; theme = &amp;quot;hugo-theme-cleanwhite&amp;quot; [outputs] home = [&amp;quot;HTML&amp;quot;, &amp;quot;RSS&amp;quot;] [params] header_image = &amp;quot;img/home-bg-jeep.jpg&amp;quot; SEOTitle = &amp;quot;开心-Coder | Kaixing Coder&amp;quot; description = &amp;quot;运维开发，三流程序员, 游戏爱好者 | 啥都会一点儿&amp;quot; keyword = &amp;quot; 开心, 开心Coder, coder, 博客, 个人网站, 互联网, devops, 云原生, Kubernetes, 微服务,Love and Peace&amp;quot; slogan = &amp;quot;天塌下来有个子高的顶着&amp;quot; image_404 = &amp;quot;img/404.</description>
     </item>
     
   </channel>
